@@ -6,10 +6,23 @@ const app = express();
 // Import path qui donne accès au chemin systeme de fichier 
 const path = require('path');
 
+// import sequelize
+/*const { sequelize } = require('./models');*/
 
-app.use((req, res) => {
+
+
+
+/*app.use((req, res) => {
    res.json({ message: 'Votre requête a bien été reçue !' }); 
-});
+});*/
+
+/*sequelize.sync({force: false})
+  .then(() => {
+    app.listen(config.port)
+    console.log(`Server started on port ${config.port}`)
+
+});*/
+
 
 //Middleware pour résoudre les problemes de CORS 
 app.use((req, res, next) => {
