@@ -9,9 +9,6 @@ const path = require('path');
 // import sequelize
 /*const { sequelize } = require('./models');*/
 
-
-
-
 /*app.use((req, res) => {
    res.json({ message: 'Votre requête a bien été reçue !' }); 
 });*/
@@ -22,6 +19,7 @@ const path = require('path');
     console.log(`Server started on port ${config.port}`)
 
 });*/
+
 
 
 //Middleware pour résoudre les problemes de CORS 
