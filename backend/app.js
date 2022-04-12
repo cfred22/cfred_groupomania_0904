@@ -1,3 +1,4 @@
+const cors = require("cors");
 const express = require('express');
 
 // Création d'une appli express
@@ -6,12 +7,17 @@ const app = express();
 // Import path qui donne accès au chemin systeme de fichier 
 const path = require('path');
 
-// import sequelize
-/*const { sequelize } = require('./models');*/
 
-/*app.use((req, res) => {
-   res.json({ message: 'Votre requête a bien été reçue !' }); 
-});*/
+app.post('/signup', (req, res) => {
+   res.send({ message: `Nouvel utilisateur !` }); 
+});
+
+// simple route
+/*app.post("/", (req, res) => {
+   res.json({ message: "Welcome to App - Backend!!!" });
+ });*/
+
+
 
 /*sequelize.sync({force: false})
   .then(() => {
@@ -19,7 +25,6 @@ const path = require('path');
     console.log(`Server started on port ${config.port}`)
 
 });*/
-
 
 
 //Middleware pour résoudre les problemes de CORS 

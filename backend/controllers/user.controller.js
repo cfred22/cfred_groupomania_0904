@@ -1,11 +1,10 @@
 // import de bcrypt pour l'authentification
-const bcrypt = require('bcrypt');
-
 // import de JWT
+const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken'); // npm install --save jsonwebtoken
 
 // Import du model user
-const User = require('../models/model_user');
+const User = require('../models/user.model');
 
 // hasher(10 tours) le mdp avec le bcrypt
 exports.signup = (req, res, next) => {

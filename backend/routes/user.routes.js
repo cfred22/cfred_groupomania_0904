@@ -5,7 +5,7 @@ const express = require('express');
 const router = express.Router();
 
 // Import du controller
-const userCtrl = require('../controllers/controller_user');
+const userCtrl = require('../controllers/user.controller');
 
 // Routes post pour sign & login 
 router.post('/signup', userCtrl.signup);
