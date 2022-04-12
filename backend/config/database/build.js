@@ -8,7 +8,7 @@ module.exports = (sequelize, Sequelize) => {
     db.sequelize = sequelize;
     db.Sequelize = Sequelize;
   
-    db.users = require("../../models/users")(sequelize, Sequelize);
+    db.user = require("../../models/User")(sequelize, Sequelize);
   
     db.sequelize.sync();
   };
