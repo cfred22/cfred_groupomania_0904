@@ -1,4 +1,5 @@
 // Database connection
+
 module.exports = (Sequelize) => {
     const sequelize = new Sequelize(
       "groupomania",

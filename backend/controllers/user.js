@@ -7,25 +7,27 @@ const jwt = require('jsonwebtoken'); // npm install --save jsonwebtoken
 // Import du model user
 const User = require('../models/User');
 
-
-
-
-// hasher(10 tours) le mdp avec le bcrypt
-exports.signup = (req, res, next) => { 
-  console.log("Je suis dans le signup"); 
-  console.log(req.body);
-  bcrypt.hash(req.body.password, 10) 
-      .then(hash => {
-        const user = new User({ // nouvel utilisateur
-          email: req.body.email,
-          password: hash  
-      }); 
-           
-      user.save() // enregistre dans la base de données 
-        .then(() => res.status(201).json({ message: 'Utilisateur crée !'})) // création de ressources OK !
-        .catch(oulala => res.status(500).json({ oulala }));
+//-->  INSCRIPTIONS UTILISATEURS  <--//
+exports.signup = (req, res, next) => {
+  bcrypt
+    .hash(req.body.password, 10)  // hasher(10 tours) le mdp avec le bcrypt
+    .then((hash) => {
+      User.create({
+        email: req.body.email,
+        password: hash,
       })
-  .catch(oulala => res.status(500).json({ oulali: req.body.password })); // erreur serveur
+        .then((User) =>
+          res.status(201).json({ message: "Utilisateur créé et sauvegardé !" })
+        )
+        .catch((error) => {
+          console.log(error);
+          res.status(500).json({ error });
+        });
+    })
+    .catch((oups) => {
+      console.log(oups);
+      res.status(500).json({ oups});
+    });
 };
 
 
