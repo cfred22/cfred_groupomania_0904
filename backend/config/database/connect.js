@@ -4,7 +4,7 @@ module.exports = (Sequelize) => {
     const sequelize = new Sequelize(
       "groupomania",
       "root",
-      "groupomania22",
+      "tomjul",
       {
         dialect: "mysql",
         host: "127.0.0.1"

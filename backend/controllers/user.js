@@ -1,13 +1,12 @@
-// import de bcrypt pour l'authentification
-const bcrypt = require('bcrypt');
+//- IMPORTS -//
+const bcrypt = require('bcrypt'); // Bcrypt pour l'authentification
+const jwt = require('jsonwebtoken'); // npm install --save jsonwebtoke
+// Sequelize
+const { Sequelize } = require("sequelize"); 
+const sequelize = require("../config/database/connect")(Sequelize);
+const User = require('../models/User')(sequelize, Sequelize);
 
-// import de JWT
-const jwt = require('jsonwebtoken'); // npm install --save jsonwebtoken
-
-// Import du model user
-const User = require('../models/User');
-
-//-->  INSCRIPTIONS UTILISATEURS  <--//
+//-  INSCRIPTIONS UTILISATEURS  -//
 exports.signup = (req, res, next) => {
   bcrypt
     .hash(req.body.password, 10)  // hasher(10 tours) le mdp avec le bcrypt
@@ -30,16 +29,10 @@ exports.signup = (req, res, next) => {
     });
 };
 
-
-
-
-
-
-
-/*
-// Permet aux utilisateurs existants de se connecter
+//- CONNECTION UTILISATEURS DÉJA ENREGISTRÉS -//
 exports.login = (req, res, next) => {
-    User.findOne({ email: req.body.email }) // trouver un utilisateur 
+    User.findOne({ 
+      where: { email: req.body.email },}) // trouver un utilisateur 
       .then(user => {
         if (!user) {
           return res.status(401).json({ error: 'Utilisateur non trouvé !' });
@@ -61,4 +54,13 @@ exports.login = (req, res, next) => {
           .catch(error => res.status(500).json({ error }));
         })
       .catch(error => res.status(500).json({ error }));
-};*/
+};
+
+
+
+/*** AFFICHER UN USER ***/
+exports.getOneUser = (req, res, next) => {
+  User.findOne({ id: req.params.id })
+    .then((user) => res.status(200).json(user))
+    .catch((error) => res.status(404).json({ error }));
+};
