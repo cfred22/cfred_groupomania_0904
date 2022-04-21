@@ -19,5 +19,5 @@ const storage = multer.diskStorage({  // ENR. sur disk
         callback(null, name + Date.now() + '.' + extension); // nom de fichier, date.now( nbre de milisec écoulé depuis 1970)  
     }
 });
-    
+   
 module.exports = multer({ storage, limits: { fileSize: 2097152 } }).single('image'); // Set a file size limit 'recommandations OWASP' ici 2 mo max

@@ -11,13 +11,17 @@ const fs = require("fs");
 
 /*** CRÉER UN POST ***/
 exports.createPost = (req, res, next) => {
-  const postObject = JSON.parse(req.body.post); // extraire sauce json de sauce.js
+    let imageUrl = "";
+    if (req.file) {
+      imageUrl = `${req.protocol}://${req.get("host")}/images/${
+        req.file.filename
+      }`;
+    }
 
   Post.create({
-    ...postObject,
-    imageUrl: `${req.protocol}://${req.get("host")}/images/${
-      req.file.filename
-    }`,
+    userId: req.body.userId,
+    message: req.body.message,
+    imageUrl: imageUrl,
   })
     .then(() => res.status(201).json({ message: "post enregistré !" }))
     .catch((error) => res.status(400).json({ error }));

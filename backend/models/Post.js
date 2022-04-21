@@ -10,7 +10,7 @@ module.exports = (sequelize, Sequelize) => {
           primaryKey: true,
         },
         message: {
-          type: Sequelize.TEXT,
+          type: Sequelize.STRING,
           allowNull: false,
           unique: true,
         },

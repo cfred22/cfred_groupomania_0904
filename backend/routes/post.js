@@ -18,7 +18,7 @@ router.post('/', multer, postCtrl.createPost); // authentification d'abord puis 
 router.delete('/:id', postCtrl.deletePost);
 router.get('/', postCtrl.getAllPosts);
 
-router.post('/:id/like', auth, postCtrl.likePost);
+//router.post('/:id/like', auth, postCtrl.likePost);
 
 
 // Export du routeur 
