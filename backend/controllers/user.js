@@ -5,6 +5,8 @@ const jwt = require('jsonwebtoken'); // npm install --save jsonwebtoke
 const { Sequelize } = require("sequelize"); 
 const sequelize = require("../config/database/connect")(Sequelize);
 const User = require('../models/User')(sequelize, Sequelize);
+//const fs = require("fs");
+
 
 //-  INSCRIPTIONS UTILISATEURS  -//
 exports.signup = (req, res, next) => {
@@ -43,9 +45,9 @@ exports.login = (req, res, next) => {
               return res.status(401).json({ error: 'Mot de passe incorrect !' });
             }
             res.status(200).json({ // renvoie a l'utilisateur son user id et un token, que le front va envoyer avec chaque requêtes.
-                userId: user._id,
+                userId: user.id,
                 token: jwt.sign( // donnée à encoder dans le token.
-                    { userId: user._id }, // correspondance a un user_id
+                    { userId: user.id }, // correspondance a un user_id
                     'RANDOM_TOKEN_SECRET', // clé secrète pour l'encodage
                     { expiresIn: '24h' } // chaque token durera 24h, après il n'est plus valable
                 )
@@ -56,10 +58,26 @@ exports.login = (req, res, next) => {
       .catch(error => res.status(500).json({ error }));
 };
 
-
-/*** AFFICHER UN USER ***/
+//- AFFICHER UN USER -//
 exports.getOneUser = (req, res, next) => {
   User.findOne({ where: { id: req.params.id } })
     .then((user) => res.status(200).json(user))
     .catch((error) => res.status(404).json({ error }));
+};
+
+
+
+//- SUPPRIMER LE PROFIL D'UN UTILISATEUR -//
+exports.deleteUser = (req, res, next) => {
+  User.findOne({ where: { id: req.params.id } })
+    .then((user) => {
+      if (!user) {
+        return res.status(404).json({ error: "Utilisateur non trouvé !" });
+      }  
+    })
+    User.destroy({ where: { id: req.params.id } })
+          .then((user) =>
+            res.status(200).json({ message: "Utilisateur supprimé !" })
+          )
+    .catch((error) => res.status(400).json({ error }));
 };

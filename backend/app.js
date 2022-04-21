@@ -19,6 +19,8 @@ try {
 
 // Import du routes/user
 const userRoutes = require('./routes/user');
+const postRoutes = require('./routes/post');
+
 
 //Middleware pour résoudre les problemes de CORS 
 app.use((req, res, next) => {
@@ -35,9 +37,9 @@ app.use(express.json());
 
 
 // Enregistrer les routes 
-/*app.use('/images', express.static(path.join(__dirname, 'images')));*/
+//app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use('/api/auth', userRoutes);
-
+app.use('/api/post', postRoutes);
 
 require("./config/database/build")(sequelize, Sequelize);
 
