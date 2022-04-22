@@ -14,7 +14,7 @@ const multer = require('../middleware/multer-config');
 // CRUD //
 // Create, read, Update, delete //
 // middleware post, put, delete, get, avec la fonction NEXT pour passer de l'un à l'autre
-router.post('/', multer, postCtrl.createPost); // authentification d'abord puis multer (fichier image) 
+router.post('/', auth, multer, postCtrl.createPost); // authentification d'abord puis multer (fichier image) 
 router.delete('/:id', postCtrl.deletePost);
 router.get('/', postCtrl.getAllPosts);
 

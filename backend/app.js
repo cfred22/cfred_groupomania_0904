@@ -38,7 +38,7 @@ app.use(express.json());
 
 // Enregistrer les routes 
 app.use('/images', express.static(path.join(__dirname, 'images')));
-app.use('/api/auth', userRoutes);
+app.use('/api/auth', userRoutes); 
 app.use('/api/post', postRoutes);
 
 require("./config/database/build")(sequelize, Sequelize);
