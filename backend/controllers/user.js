@@ -73,11 +73,18 @@ exports.deleteUser = (req, res, next) => {
     .then((user) => {
       if (!user) {
         return res.status(404).json({ error: "Utilisateur non trouvé !" });
-      }  
-    })
-    User.destroy({ where: { id: req.params.id } })
+      }
+      const filename = user.photoUrl.split("/images/")[1];
+
+      // 1er arg: chemin du fichier, 2e arg: la callback=ce qu'il faut faire une fois la photo supprimée
+      fs.unlink(`images/${filename}`, () => {
+        // on supprime l'utilisateur de la base de donnée en indiquant son id  
+        User.destroy({ where: { id: req.params.id } })
           .then((user) =>
             res.status(200).json({ message: "Utilisateur supprimé !" })
           )
-    .catch((error) => res.status(400).json({ error }));
+          .catch((error) => res.status(400).json({ error }));
+      });
+    })
+  .catch((error) => res.status(400).json({ error }));
 };

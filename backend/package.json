@@ -13,10 +13,12 @@
     "auth-js": "^0.0.16",
     "bcrypt": "^5.0.1",
     "express": "^4.17.3",
+    "file-system": "^2.2.2",
     "fs": "^0.0.1-security",
     "jsonwebtoken": "^8.5.1",
     "multer": "^1.4.4",
     "mysql2": "^2.3.3",
+    "path": "^0.12.7",
     "sequelize": "^6.18.0"
   }
 }

@@ -1,6 +1,5 @@
 /* Stockage de toute la logique métier avec le controller */
 
-
 // Sequelize
 const { Sequelize } = require("sequelize"); 
 const sequelize = require("../config/database/connect")(Sequelize);
@@ -27,35 +26,61 @@ exports.createPost = (req, res, next) => {
     .catch((error) => res.status(400).json({ error }));
 };
 
+/*** AFFICHER UN POST ***/
+exports.getOnePost = (req, res, next) => {
+  Post.findOne({
+    where: { id: req.params.id },
+    include: {
+      model: User,
+      attributes: {
+        exclude: ["id", "password", "email", "createdAt", "updatedAt"],
+      },
+    },
+  })
+    .then((post) => {
+      //si le post n'existe pas
+      if (post === null) {
+        return res.status(404).json({ message: "Ce post n'existe pas." });
+      } else {
+        res.status(200).json(post);
+      }
+    })
+    .catch((error) => res.status(404).json({ error }));
+};
+
+/*** AFFICHER TOUS LES POSTS ***/
+exports.getAllPosts = (req, res, next) => {
+  Post.findAll({
+      include: {
+        model: User,
+        attributes: {
+          exclude: ["id", "password", "email", "createdAt", "updatedAt"],
+        }
+      },
+    })
+  .then((posts) => res.status(200).json(posts))
+  .catch((error) => res.status(400).json({ error }));
+};
+
 /*** SUPPRIMER UN POST ***/
 exports.deletePost = (req, res, next) => {
-  Post.findOne({ id: req.params.id })
-    .then(
-      // trouver le nom du fichier à supprimer
-      (post) => {
-        const filename = post.imageUrl.split("/images/")[1]; // récupérer et extraire le nom du fichier à suuprimer
-        fs.unlink(`images/${filename}`, () => {
-          // suppression avec unlink
-          Post.deleteOne({ id: req.params.id }) // suppression complète dans la base
-            .then(() => res.status(200).json({ message: "Post supprimée !" }))
-            .catch((error) => res.status(400).json({ error }));
-        });
+  Post.findOne({ where: { id: req.params.id } })
+    .then((post) => {
+      if (!post) {
+        return res.status(404).json({ error: "Post non trouvé !" });
       }
-    )
-    .catch((error) => res.status(500).json({ error }));
-};
 
+      const filename = post.imageUrl.split("/images/")[1];
+      console.log(filename);
 
-/*** AFFICHER TOUS LES POSTES ***/
-exports.getAllPosts = (req, res, next) => {
-    Post.findAll({
-        include: {
-          model: User,
-          attributes: {
-            exclude: ["id", "password", "email", "createdAt", "updatedAt"],
-          }
-        },
-      })
-    .then((posts) => res.status(200).json(posts))
+      fs.unlink(`images/${filename}`, () => {
+        Post.destroy({ where: { id: req.params.id } })
+          .then(() => res.status(200).json({ message: "Post supprimé !" }))
+          .catch((error) => res.status(400).json({ error }));
+      });
+    })
+
     .catch((error) => res.status(400).json({ error }));
 };
+
+
