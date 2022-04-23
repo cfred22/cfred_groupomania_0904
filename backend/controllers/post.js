@@ -4,6 +4,7 @@
 const { Sequelize } = require("sequelize"); 
 const sequelize = require("../config/database/connect")(Sequelize);
 const Post = require('../models/Post')(sequelize, Sequelize);
+const User = require('../models/User')(sequelize, Sequelize);
 
 // Import du package file system de node
 const fs = require("fs");
@@ -13,8 +14,7 @@ exports.createPost = (req, res, next) => {
     let imageUrl = "";
     if (req.file) {
       imageUrl = `${req.protocol}://${req.get("host")}/images/${
-        req.file.filename
-      }`;
+        req.file.filename }`;
     }
 
   Post.create({
@@ -26,44 +26,15 @@ exports.createPost = (req, res, next) => {
     .catch((error) => res.status(400).json({ error }));
 };
 
-/*** AFFICHER UN POST ***/
-exports.getOnePost = (req, res, next) => {
-  Post.findOne({
-    where: { id: req.params.id },
-    include: {
-      model: User,
-      attributes: {
-        exclude: ["id", "password", "email", "createdAt", "updatedAt"],
-      },
-    },
-  })
-    .then((post) => {
-      //si le post n'existe pas
-      if (post === null) {
-        return res.status(404).json({ message: "Ce post n'existe pas." });
-      } else {
-        res.status(200).json(post);
-      }
-    })
-    .catch((error) => res.status(404).json({ error }));
-};
-
 /*** AFFICHER TOUS LES POSTS ***/
 exports.getAllPosts = (req, res, next) => {
-  Post.findAll({
-      include: {
-        model: User,
-        attributes: {
-          exclude: ["id", "password", "email", "createdAt", "updatedAt"],
-        }
-      },
-    })
+  Post.findAll()
   .then((posts) => res.status(200).json(posts))
   .catch((error) => res.status(400).json({ error }));
 };
 
 /*** SUPPRIMER UN POST ***/
-exports.deletePost = (req, res, next) => {
+exports.deletePost = (req, res,) => {
   Post.findOne({ where: { id: req.params.id } })
     .then((post) => {
       if (!post) {

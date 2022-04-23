@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken'); // npm install --save jsonwebtoke
 const { Sequelize } = require("sequelize"); 
 const sequelize = require("../config/database/connect")(Sequelize);
 const User = require('../models/User')(sequelize, Sequelize);
-//const fs = require("fs");
+const fs = require("fs");
 
 
 //-  INSCRIPTIONS UTILISATEURS  -//
@@ -65,26 +65,16 @@ exports.getOneUser = (req, res, next) => {
     .catch((error) => res.status(404).json({ error }));
 };
 
-
-
 //- SUPPRIMER LE PROFIL D'UN UTILISATEUR -//
-exports.deleteUser = (req, res, next) => {
-  User.findOne({ where: { id: req.params.id } })
-    .then((user) => {
-      if (!user) {
-        return res.status(404).json({ error: "Utilisateur non trouvé !" });
-      }
-      const filename = user.photoUrl.split("/images/")[1];
-
-      // 1er arg: chemin du fichier, 2e arg: la callback=ce qu'il faut faire une fois la photo supprimée
-      fs.unlink(`images/${filename}`, () => {
-        // on supprime l'utilisateur de la base de donnée en indiquant son id  
-        User.destroy({ where: { id: req.params.id } })
-          .then((user) =>
-            res.status(200).json({ message: "Utilisateur supprimé !" })
-          )
-          .catch((error) => res.status(400).json({ error }));
-      });
+exports.deleteUser = async (req, res) => {
+  const { id } = req.params;
+  User.destroy({ where: { id: id } })
+    .then((deleted) => {
+      if (deleted === 0)
+        return res
+          .status(404)
+          .json({ message: "Cet utilisateur n'existe pas" });
+      res.status(200).json({ message: "Utilisateur bien supprimé !" });
     })
-  .catch((error) => res.status(400).json({ error }));
+    .catch((error) => res.status(500).json({ error: error }));
 };
