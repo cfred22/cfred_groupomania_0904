@@ -18,7 +18,7 @@ exports.signup = (req, res, next) => {
         password: hash,
       })
         .then((User) =>
-          res.status(201).json({ message: "Utilisateur créé et sauvegardé !" })
+          res.status(201).json(User) // Utilsateur créé et sauvegardé !
         )
         .catch((error) => {
           console.log(error);

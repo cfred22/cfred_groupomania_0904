@@ -17,9 +17,10 @@ try {
     console.error('Impossible de se connecter, erreur suivante :', error);
   }
 
-// Import du routes/user
+// Import du routes/user/post/routes
 const userRoutes = require('./routes/user');
 const postRoutes = require('./routes/post');
+const commentRoutes = require('./routes/comment');
 
 
 //Middleware pour résoudre les problemes de CORS 
@@ -40,6 +41,8 @@ app.use(express.json());
 app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use('/api/auth', userRoutes); 
 app.use('/api/post', postRoutes);
+app.use('/api/comment', commentRoutes);
+
 
 require("./config/database/build")(sequelize, Sequelize);
 

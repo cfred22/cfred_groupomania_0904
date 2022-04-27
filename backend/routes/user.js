@@ -11,7 +11,7 @@ router.post('/login', userCtrl.login);
 
 //-->  ROUTES PROFIL UTILISATEURS <--// **** TODO AUTH
 router.get("/profile/:id", auth, userCtrl.getOneUser); //afficher un profil
-//router.put("/profile/:id", auth, multer, userCtrl.modifyUser); //modifier un profil
+
 router.delete("/profile/:id", auth, userCtrl.deleteUser); //supprimer un profil
 
 // Export du routeur
