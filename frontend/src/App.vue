@@ -1,27 +1,57 @@
 <template>
-  <h1>Hello Cfred ;)</h1>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <nav>
+    <router-link to="/">Accueil</router-link> |
+    <router-link to="/login">Connexion</router-link>
+  </nav>
+  <router-view></router-view>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    
   }
 }
 </script>
 
-<style lang="scss">
+<style>
+
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
 }
+
+body {
+  background-image: grey;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding:32px;
+}
+
+#logo {
+  width: 250px;
+}
+
+a {
+  text-decoration: none;
+  color: gray;
+}
+
+.router-link-active {
+  font-weight: bold;
+  color: darkred;
+}
+
+
+
+
 </style>
