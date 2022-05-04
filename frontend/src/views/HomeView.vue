@@ -8,7 +8,7 @@
     <img id="img_groupo" alt="Siège de l'entreprise Groupomania" src="../assets/groupomania_headquarter.png" />
 </template>
 
-<style>
+<style scoped>
 
 p {
   color: gray;

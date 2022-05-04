@@ -3,11 +3,11 @@
     
 
     <div class="card">
-      <h1>Connection au réseau social 💬</h1>
+      <h1>Réseau social</h1>
       <!--Logo-->
       <img id="logo" alt="Logo de l'entreprise Groupomania" src="../assets/logo.png" />
 
-      <h2 class="card__title" v-if="mode == 'login'">Connexion</h2>
+      <h2 class="card__title" v-if="mode == 'login'">Connexion 💬</h2>
       <h2 class="card__title" v-else>Inscription</h2>
 
       <p class="card__subtitle" v-if="mode == 'login'">Tu n'as pas encore de compte ? <span class="card__action" @click="switchToSignup()"><strong>Créer un compte</strong></span></p>
