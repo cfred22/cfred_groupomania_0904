@@ -16,6 +16,8 @@ exports.signup = (req, res, next) => {
       User.create({
         email: req.body.email,
         password: hash,
+        lastName: req.body.lastName,
+        firstName: req.body.firstName,
       })
         .then((User) =>
           res.status(201).json(User) // Utilsateur créé et sauvegardé !

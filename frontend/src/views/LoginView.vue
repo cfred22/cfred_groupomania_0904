@@ -3,7 +3,7 @@
     
 
     <div class="card">
-      <h1>Réseau social</h1>
+      <h1>Réseau social interne</h1>
       <!--Logo-->
       <img id="logo" alt="Logo de l'entreprise Groupomania" src="../assets/logo.png" />
 
@@ -18,8 +18,8 @@
       </div>
 
       <div class="form-row" v-if="mode == 'create'">
-        <input v-model="prenom" class="form-row__input" type="text" placeholder="Prénom"/>
-        <input v-model="nom" class="form-row__input" type="text" placeholder="Nom"/>
+        <input v-model="firstName" class="form-row__input" type="text" placeholder="Prénom"/>
+        <input v-model="lastName" class="form-row__input" type="text" placeholder="Nom"/>
       </div>
 
       <div class="form-row">
@@ -35,9 +35,9 @@
       </div>
 
       <div class="form-row">
-        <button @click="login()" class="button" :class="{'button--disabled' : !validatedFields}" v-if="mode == 'login'">
-          <span v-if="status == 'loading'">Connexion en cours...</span>
-          <span v-else>Connexion</span>
+          <button @click="login()" class="button" :class="{'button--disabled' : !validatedFields}" v-if="mode == 'login'">
+            <span v-if="status == 'loading'">Connexion en cours...</span>
+            <span v-else>Connexion</span>
           </button>
         <button @click="signup()" class="button" :class="{'button--disabled' : !validatedFields}" v-else>
           <span v-if="status == 'loading'">Création en cours...</span>
@@ -50,6 +50,7 @@
 
 <script>
 
+import { mapState } from 'vuex'
 
 
 export default {
@@ -58,15 +59,15 @@ export default {
     return {
       mode: 'login',
       email: '',
-      prenom: '',
-      nom: '',
+      lastName: '',
+      firstName: '',
       password: '',
     }
   },
   computed: {
     validatedFields: function () {
       if (this.mode == 'create') {
-        if (this.email != "" && this.prenom != "" && this.nom != "" && this.password != "") {
+        if (this.email != "" && this.lastName != "" && this.firstName != "" && this.password != "") {
           return true;
         } else {
           return false;
@@ -78,7 +79,8 @@ export default {
           return false;
         }
       }
-    }  
+    },
+    ...mapState(['status'])
   },
   methods: {
     switchToSignup: function () {
@@ -87,12 +89,24 @@ export default {
     switchToLogin: function () {
       this.mode = 'login';
     },
-    signup: function () {
+    login: function () {
+      const self = this;
       console.log(this.email, this.password);
+      this.$store.dispatch('login', {
+        email: this.email,
+        password: this.password,
+      }) .then(function () {
+        self.$router.push('list');
+      }, function (error) {
+        console.log(error);
+      })
+    },
+    signup: function () {
+      console.log(this.email, this.password, this.lastName);
       this.$store.dispatch('signup', {
         email: this.email,
-        //nom: this.nom,
-        //prenom: this.prenom,
+        lastName: this.lastName,
+        firstName: this.firstName,
         password: this.password,
       }) .then(function (response) {
         console.log(response);
@@ -128,7 +142,7 @@ export default {
   .form-row__input::placeholder {
     color:#aaaaaa;
   }
-</style>>
+</style>
 
 
 

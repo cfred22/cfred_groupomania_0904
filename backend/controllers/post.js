@@ -18,11 +18,11 @@ exports.createPost = (req, res, next) => {
     }
 
   Post.create({
-    userId: req.body.userId,
+    userId: req.auth.userId,
     message: req.body.message,
     imageUrl: imageUrl,
   })
-    .then(() => res.status(201).json({ message: "post enregistré !" }))
+    .then((post) => res.status(201).json(post))
     .catch((error) => res.status(400).json({ error }));
 };
 
