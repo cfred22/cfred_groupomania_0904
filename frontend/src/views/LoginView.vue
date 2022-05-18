@@ -39,10 +39,10 @@
             <span v-if="status == 'loading'">Connexion en cours...</span>
             <span v-else>Connexion</span>
           </button>
-        <button @click="signup()" class="button" :class="{'button--disabled' : !validatedFields}" v-else>
-          <span v-if="status == 'loading'">Création en cours...</span>
-          <span v-else>Créer mon compte</span>
-        </button>
+          <button @click="signup()" class="button" :class="{'button--disabled' : !validatedFields}" v-else>
+            <span v-if="status == 'loading'">Création en cours...</span>
+            <span v-else>Créer mon compte</span>
+          </button>
       </div>
     </div>
   </section>
@@ -141,6 +141,7 @@ export default {
   }
   .form-row__input::placeholder {
     color:#aaaaaa;
+    
   }
 </style>
 

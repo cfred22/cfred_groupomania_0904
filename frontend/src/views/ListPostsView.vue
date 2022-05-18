@@ -1,16 +1,17 @@
 <template>
   <div class="card">
-    <h1 class="card__title">Forum entreprise Groupomania</h1>
+    <h1 class="cardtitle">Forum Groupomania</h1>
     <div class="form-row">
-        <input class="form-row__input" type="text" placeholder="Quoi de neuf ?"/>
-        <button @click="createPost()" class="button" :class="{'button--disabled' : !validatedFields}">
+      <form action="/" method="post">
+        <input v-model="messagePost.message" class="form-row__input" type="text" placeholder="Quoi de neuf ?" />
+        <button @click.prevent="createPost()" class="button" :class="{'button--disabled' : !validatedFields}">
           <span v-if="status == 'loading'">envoi du message...</span>
           <span v-else>Envoyer</span>
         </button>
+      </form>
     </div>
-
-    
   </div>
+
 </template>
 
 <script>
@@ -18,30 +19,52 @@
 import axios from "axios";
 import { mapState } from 'vuex';
 
+
+
 export default {
   name: 'ListPostsView',
-  mounted: function () {
-    console.log(this.$store.state.user);
-    if (this.$store.state.user.userId == -1) {
-      this.$router.push('/');
-      return ;
-    }
-    this.$store.dispatch('getUserInfos');
+  data() {
+    return {
+      messagePost: {
+        message: null,
+      },
+      msgError: '',
+      post: '',
+    };
   },
-  computed: {
-    ...mapState({
-      user: 'userInfos',
-    })
+   computed: {
+    validatedFields: function () {
+      if (this.post == 'createPost') {
+        if (this.post != "") {
+          return true;
+        } else {
+          return false;
+        }
+      } else {
+        if (this.post == "") {
+          return true;
+        } else {
+          return false;
+        }
+      }
+    },
+    ...mapState(['status'])
   },
+  
   methods: {
     createPost() {
+      var storage = JSON.parse(localStorage.getItem("user"));
+      var token = storage.token;
+      var userId = storage.userId;
+
       const fd = new FormData();
       fd.append("message", this.messagePost.message);
-      
+      fd.append("userId", userId);
+
       axios
-        .post("http://localhost:3000/api/auth/infos", fd, {
+        .post("http://localhost:3000/api/auth/post", fd, {
           headers: {
-            Authorization: "Bearer " + window.localStorage.getItem("token")
+            Authorization: 'Bearer ' + token
           }
         })
         .then(response => {
@@ -53,9 +76,36 @@ export default {
         .catch(error => (this.msgError = error));
     }
   }
+  
 }
+
 </script>
 
-<style scoped>
 
-</style>>
+
+
+
+<style scoped>
+  .form-row {
+    display: flex;
+    margin: 16px 0px;
+    gap:16px;
+    flex-wrap: wrap;
+  }
+  .form-row__input {
+    padding: 12px;
+    margin: 15px;
+    border: none;
+    border-radius: 8px;
+    background:#f2f2f2;
+    font-weight: 500;
+    font-size: 16px;
+    flex:1;
+    color: black;
+  }
+  .form-row__input::placeholder {
+    color:#aaaaaa;
+    
+    
+  }
+</style>
