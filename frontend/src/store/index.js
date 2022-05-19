@@ -86,7 +86,7 @@ const store = createStore({
       });
     },
     getUserInfos: ({commit}) => {
-      instance.post('auth/infos')
+      instance.post('auth/profile')
       .then(function (response) {
         commit('userInfos', response.data.infos);
         
