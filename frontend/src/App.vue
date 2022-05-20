@@ -44,7 +44,7 @@ a {
 }
 
 body {
-  background: white;
+  background: #FBFCFA;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -77,7 +77,6 @@ body {
 }
 
 .card__action {
-  color:#2196F3;
   text-decoration: underline;
 }
 .card__action:hover {

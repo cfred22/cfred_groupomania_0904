@@ -1,6 +1,10 @@
 <template>
   <div class="card-text" v-if="post.message!=='null'">
     <p class="mb-0">{{post.message}}</p>
+    <div id="app">
+      <p>{{currentDateTime()}}</p>
+    </div>
+    
   </div>
   
 </template>
@@ -8,6 +12,8 @@
 <script>
 
 import { mapState } from 'vuex';
+import moment from 'moment';
+
 
 export default {
   name: 'CreatePost',
@@ -39,24 +45,27 @@ export default {
     }
   },
   
-  methods: {}
-  
+  methods: {
+    currentDateTime() {
+      return moment().format('MMMM Do YYYY, h:mm:ss a')
+    }
+  },
 }
+
+
+
 </script>
 
 <style scoped>
 .form-row {
     display: flex;
-    margin: 16px 0px;
     gap:16px;
     flex-wrap: wrap;
 }
-.form-row__input {
-    padding: 12px;
-    margin: 15px;
+.card-text {
     border: none;
-    border-radius: 8px;
-    background:#f2f2f2;
+    border-radius: 20px;
+    background: white;
     font-weight: 500;
     font-size: 16px;
     flex:1;
@@ -65,5 +74,7 @@ export default {
 .form-row__input::placeholder {
     color:#aaaaaa;    
 }
+
+
 
 </style>
