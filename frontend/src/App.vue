@@ -40,7 +40,7 @@ a {
 
 .router-link-active {
   font-weight: bold;
-  color: darkred;
+  color: #FD2D01;
 }
 
 body {
@@ -65,7 +65,7 @@ body {
 }
 
 .button {
-  background: #2196F3;
+  background: #4E5166;
   color:white;
   border-radius: 8px;
   font-weight: 800;
@@ -85,12 +85,12 @@ body {
 
 .button:hover {
   cursor:pointer;
-  background: #1976D2;
+  background: #FD2D01;
 }
 
 .button--disabled {
-  background:#cecece;
-  color:#ececec
+  background: #FFD7D7;
+  color: #666;
 }
 
 .button--disabled:hover {

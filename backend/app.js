@@ -9,6 +9,7 @@ const { Sequelize } = require("sequelize");
 const sequelize = require("./config/database/connect")(Sequelize);
 
 
+
 // test DB
 try {
     sequelize.authenticate();
@@ -22,6 +23,8 @@ const userRoutes = require('./routes/user');
 const postRoutes = require('./routes/post');
 const commentRoutes = require('./routes/comment');
 
+const cors = require ('cors');  // cors
+
 
 //Middleware pour résoudre les problemes de CORS 
 app.use((req, res, next) => {
@@ -34,6 +37,8 @@ app.use((req, res, next) => {
 // Middleware intercepte toutes les requêtes avec content type json,
 // et met leur body directement sur l'objet req
 app.use(express.json());
+
+app.use(cors());
 
 
 

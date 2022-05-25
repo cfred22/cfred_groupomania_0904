@@ -1,7 +1,7 @@
 <template>
   <div id="post" class="post">
     <CreatePost class="createPost"/>
-    <Post v-for="post in allPosts.reverse()" class="onepost" v-bind:key="post.message" :post="post" />
+    <Post v-for="post in allPosts.reverse()" class="onepost" v-bind:key="post.id" :post="post" @infosPost="setInfos"/>
     
 
   </div>
@@ -34,7 +34,13 @@ export default {
   },
   mounted() {
     var storage = JSON.parse(localStorage.getItem("user"));
-      var token = storage.token;
+    var token = storage.token;
+    // pour éviter la faille de sécurité: l'utilisateur ajouter "/profile" sans se connecter
+    if (Storage === null) {
+      this.$router.push("/");
+      return;
+    }
+
       
     
     axios
@@ -48,10 +54,12 @@ export default {
         this.allPosts = response.data;
       })
       .catch(error => {
-        console.log(error); //affiche pas le message 'normalement' envoyé par le back
-      })
+        console.log(error); //n'affiche pas le message 'normalement' envoyé par le back
+      }),
+      this.$store.dispatch("getUserInfos"); // problème pour recup userinfos
     
-  },
+  }
+  
   /*methods: {
     getUser() {
       var storage = JSON.parse(localStorage.getItem("user"));
@@ -74,8 +82,9 @@ export default {
         console.log(error); //affiche pas le message 'normalement' envoyé par le back
       })  
     }
+    
   }*/
-}
+};
 
 </script>
 

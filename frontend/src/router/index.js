@@ -5,6 +5,7 @@ import Login from '@/views/SignupLoginView.vue'
 import List from "@/views/ListPostsView.vue";
 import Profile from "@/views/ProfileView.vue";
 
+
 const routes = [
     {
         name: 'Home', 
@@ -26,6 +27,7 @@ const routes = [
         path: '/profile',
         component: Profile,
     }, 
+    
     
 ]
 

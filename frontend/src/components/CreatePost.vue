@@ -45,7 +45,7 @@ export default {
         }
       }
     },
-    ...mapState(['status'])
+    ...mapState(['status', 'editOption'])
   },
   
   methods: {
@@ -64,6 +64,7 @@ export default {
             Authorization: 'Bearer ' + token
           }
         })
+        
         .then(response => {
           //Si retour positif de l'API reload de la page pour affichage du dernier post
           if (response) {

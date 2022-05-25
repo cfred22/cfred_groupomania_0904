@@ -2,8 +2,38 @@
   <div class="card-text" v-if="post.message!=='null'">
     <p class="mb-0">{{post.message}}</p>
     <div id="app">
-      <p>{{currentDateTime()}}</p>
+        <button
+          class="modifPost button"
+          
+          type="button"
+          @click="modify('modify');"
+          >Modif. 🖊️
+          </button>
+      <div class="menu-modif" >
+        <button
+          class="deletePost button"
+          
+          type="button"
+          @click="deletePost('delete');"
+          >Suppr. 🗑️
+        </button>
+        
+      </div>
+       <div class="menu-like" >
+        <button
+          class="like button"
+          
+          type="button"
+          @click="like('like');"
+          >like 👍
+        </button>
+        
+      </div>
+      
+      
     </div>
+    
+    
     
   </div>
   
@@ -12,11 +42,11 @@
 <script>
 
 import { mapState } from 'vuex';
-import moment from 'moment';
 
 
 export default {
   name: 'CreatePost',
+  components: {},
   data() {
     return {};
   },
@@ -36,7 +66,7 @@ export default {
         }
       }
     },
-    ...mapState(['status'])
+    ...mapState(['status', 'user'])
   },
   props: {
     post: {
@@ -46,34 +76,48 @@ export default {
   },
   
   methods: {
-    currentDateTime() {
-      return moment().format('MMMM Do YYYY, h:mm:ss a')
+    
+    deletePost(value) {
+      this.$store.dispatch("deletePost", value);
     }
-  },
-}
+  }
+};
 
 
 
 </script>
 
 <style scoped>
+
+
 .form-row {
-    display: flex;
-    gap:16px;
-    flex-wrap: wrap;
+  display: flex;
+  gap:16px;
+  flex-wrap: wrap;
 }
 .card-text {
-    border: none;
-    border-radius: 20px;
-    background: white;
-    font-weight: 500;
-    font-size: 16px;
-    flex:1;
-    color: black;
+  border: none;
+  border-radius: 20px;
+  background: white;
+  font-weight: 500;
+  font-size: 16px;
+  color: black;
+  display: flex;
+  justify-content: space-between;
 }
 .form-row__input::placeholder {
-    color:#aaaaaa;    
+  color:#aaaaaa;    
+  
 }
+
+.deletePost, .modifPost, .like {
+  
+  font-size: 12px;
+  margin: 10px 0 10px 0;
+  
+}
+
+
 
 
 
