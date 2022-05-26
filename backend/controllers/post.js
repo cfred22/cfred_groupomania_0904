@@ -1,13 +1,14 @@
 /* Stockage de toute la logique métier avec le controller */
 
 // Sequelize
-const { Sequelize } = require("sequelize"); 
+const { Sequelize, where } = require("sequelize"); 
 const sequelize = require("../config/database/connect")(Sequelize);
 const Post = require('../models/Post')(sequelize, Sequelize);
 const User = require('../models/User')(sequelize, Sequelize);
 
 // Import du package file system de node
 const fs = require("fs");
+const Op = require ("sequelize").Op;
 
 /*** CRÉER UN POST ***/
 exports.createPost = (req, res, next) => {
@@ -28,7 +29,21 @@ exports.createPost = (req, res, next) => {
 
 /*** AFFICHER TOUS LES POSTS ***/
 exports.getAllPosts = (req, res, next) => {
-  Post.findAll()
+  var where = {};
+  if (req.query.type == "text"){
+    where = {
+      where: {
+         message: { [Op.not]: null || "" }
+      }
+    }
+  } else if (req.query.type == "image"){
+    where = {
+      where: {
+        imageUrl: { [Op.not]: null || "" }
+      }
+    }
+  }
+  Post.findAll(where)
   .then((posts) => res.status(200).json(posts))
   .catch((error) => res.status(400).json({ error }));
 };

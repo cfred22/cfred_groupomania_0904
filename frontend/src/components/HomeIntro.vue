@@ -13,7 +13,6 @@
 p {
   color: gray;
   margin: 40px;
-  margin: 80px 0 10px 0;
 }
 
 #img_groupo { /*cadre vignettes hotel et ombres*/
