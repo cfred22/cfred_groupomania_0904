@@ -69,4 +69,32 @@ exports.deletePost = (req, res,) => {
     .catch((error) => res.status(400).json({ error }));
 };
 
+/*exports.likePost = (req, res, next) => {
+  Post.findOne({ where: {id: req.params.id} })
+  .then((post) => {
+    let likes = post.likes;
+    let usersLiked = post.usersLiked;
+    let userId = req.body.userIdLike;
+    if (usersLiked) {
+      const found = usersLiked.find(p => p == userId);
+      if (found) {
+        likes--;
+        let userKey = usersLiked.indexOf(userId);
+        usersLiked.splice(userKey, 1);
+      }
+      else{
+        likes++;
+        usersLiked.push(req.body.userIdLike);
+      }
+      postObject = {...post, likes, usersLiked}
+    }
+    else {
+      usersLiked = [];
+      likes++;
+      usersLiked.push(req.body.userIdLike);
+      postObject = {...post, likes, usersLiked}
+    }
+  })
+};*/
+
 

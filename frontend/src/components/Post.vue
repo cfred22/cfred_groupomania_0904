@@ -1,46 +1,56 @@
 <template>
   <div class="card-text" v-if="post.message!=='null'">
-    <p class="mb-0">{{post.message}}</p>
+    <div class="card-userName">
+      <p class="userName"> ☺︎ {{user.firstName}} {{user.lastName}} </p>
+      <p class="date-time"> Publié le {{ new Date(post.createdAt).toLocaleString() }}</p>
+    </div>
+
+    <div class="card-file">
+      <img class="cover" v-if="post.imageUrl" :src="post.imageUrl"  alt="Image" height="250" width="300"/>
+      <img v-else />
+    </div>
+
+    <div class="card-messageTxt">
+      <p class="message">{{post.message}}</p>
+    </div>
+ 
     <div id="app">
-        <button
-          class="modifPost button"
-          
-          type="button"
-          @click="modify('modify');"
-          >Modif. 🖊️
-          </button>
-      <div class="menu-modif" >
-        <button
-          class="deletePost button"
-          
-          type="button"
-          @click="deletePost('delete');"
-          >Suppr. 🗑️
-        </button>
         
+      <div class="menu">  
+        <button class="deletePost" v-if="post.userId === userId" type="button" @click="deletePost()"> Supprimer Post
+        
+        </button>
+        <button class="modifPost" type="button" @click="modify()"> Modifier Post
+        </button>
       </div>
-       <div class="menu-like" >
+      
+
+      <!-- <div class="menu-like" >
         <button
-          class="like button"
+          class="like post-change"
           
           type="button"
           @click="like('like');"
-          >like 👍
+          >👍
         </button>
         
+      </div> -->
+      
+   <!-- <div class="like">
+       <div v-if="(this.userLike == true)" >
+        <button class="buttonLike blue">{{this.post.likes}}<fa @click="addLike()"  icon="thumbs-up" class="thumbs up"/></button>
       </div>
-      
-      
+      <div v-else >
+        <button class="buttonLike thumbsgrey">{{this.post.likes}}<fa @click="addLike()" icon="thumbs-up" class="thumbs up"/></button>
+      </div>
+      </div> -->
     </div>
-    
-    
-    
-  </div>
+  </div> 
   
 </template>
 
 <script>
-
+import axios from "axios";
 import { mapState } from 'vuex';
 
 
@@ -48,7 +58,14 @@ export default {
   name: 'CreatePost',
   components: {},
   data() {
-    return {};
+    return {
+      userId: this.post.userId, 
+      currentUserId: "",
+      user: {
+        firstName: "",
+        lastName: ""
+      }
+    };
   },
    computed: {
     validatedFields: function () {
@@ -68,18 +85,48 @@ export default {
     },
     ...mapState(['status', 'user'])
   },
+  mounted() {
+    var storage = JSON.parse(localStorage.getItem("user"));
+    var token = storage.token;
+
+    axios.get("http://localhost:3000/api/auth/profile/" + this.userId, {
+    headers: {Authorization: "Bearer " + token}})
+    .then(response => {
+      this.user = response.data;
+    })
+  },
   props: {
     post: {
       type: Object,
       required: true
     }
   },
-  
   methods: {
     
-    deletePost(value) {
-      this.$store.dispatch("deletePost", value);
-    }
+    deletePost() {
+      var storage = JSON.parse(localStorage.getItem("user"));
+      var token = storage.token;
+      axios.delete("http://localhost:3000/api/auth/post/" + this.post.id,{
+      headers: {Authorization: "Bearer " + token}})
+      .then(response => {
+        this.$router.push = response.data;
+        if (response) {
+          window.location.reload();
+        }
+      })
+    },
+    /*addLike(){
+      this.like = 1;
+      const formData = {like : this.like, userIdLike : this.userId}
+      axios.post("http://localhost:3000/api/article/"  + this.article_id + "/like", formData, {
+      headers: {Authorization: "Bearer " + this.token}})
+      .then(() => {
+        this.getPost();
+      })
+    },
+    cancel() {
+      location.reload();
+    }*/
   }
 };
 
@@ -89,6 +136,15 @@ export default {
 
 <style scoped>
 
+a {
+  text-decoration: none;
+  color: red;
+}
+
+#app {
+  display: flex;
+  justify-content: space-around;
+}
 
 .form-row {
   display: flex;
@@ -103,22 +159,44 @@ export default {
   font-size: 16px;
   color: black;
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
 }
+
+.card-file {
+  display: block;
+  margin: auto;
+  width: 100%;
+  height: 100%;
+}
+
+.cover {
+  object-fit: cover;
+}
+
 .form-row__input::placeholder {
   color:#aaaaaa;    
-  
 }
 
-.deletePost, .modifPost, .like {
-  
+.date-time {
+  color: gray;
   font-size: 12px;
-  margin: 10px 0 10px 0;
-  
 }
 
+.modifPost, .deletePost {
+  color: black;
+  border-radius: 6px;
+  font-size: 14px;
+  margin: 10px 10px 10px 0;
+}
 
-
+.modifPost:hover, .deletePost:hover {
+  cursor: pointer;
+  background: #FD2D01;
+  color: white;
+  
+  
+  
+}
 
 
 </style>

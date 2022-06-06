@@ -1,5 +1,5 @@
 <template>
-    <h1>Bienvenue chez groupConnect 👋</h1>
+    <h1>Bienvenue chez groupConnect 😀</h1>
     <p>Notre entreprise <strong>Groupomania</strong> spécialisée dans la grande distribution, est en pleine expansion.<br> Nous avons actuellement
         plus de 600 collaborateurs et avons beaucoup recruté depuis quelques années.<br> Nous étions uniquement
         300 il y a 3 ans.

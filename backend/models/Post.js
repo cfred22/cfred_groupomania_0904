@@ -23,6 +23,17 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.STRING,
             allowNull: true,
         },
+        /*likes:{ 
+          type: DataTypes.NUMBER, 
+          default:0 ,
+          allowNull: true,
+        },
+        usersLiked : {
+          type : DataTypes.JSON,
+          allowNull: true,
+        },*/
+        
+        
         
       },
       {

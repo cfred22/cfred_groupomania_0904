@@ -2,8 +2,6 @@
   <div id="post" class="post">
     <CreatePost class="createPost"/>
     <Post v-for="post in allPosts.reverse()" class="onepost" v-bind:key="post.id" :post="post" @infosPost="setInfos"/>
-    
-
   </div>
 </template>
 
@@ -25,7 +23,7 @@ export default {
       post: {
         id: "",
         message: "",
-        image: "",
+        imageUrl: "",
         userId:"",
         
       },
@@ -60,31 +58,9 @@ export default {
     
   }
   
-  /*methods: {
-    getUser() {
-      var storage = JSON.parse(localStorage.getItem("user"));
-      var token = storage.token;
-
-      axios
-      .get("http://localhost:3000/api/auth/profile/", {
-        headers: {
-          Authorization: "Bearer " + token
-        },
-        data: {
-          userId: this.userId,
-        }
-      })
-      .then(response => {
-        console.log("post", response.data);
-        this.allPosts = response.data;
-      })
-      .catch(error => {
-        console.log(error); //affiche pas le message 'normalement' envoyé par le back
-      })  
-    }
-    
-  }*/
+  
 };
+
 
 </script>
 
@@ -107,6 +83,7 @@ export default {
   border-radius: 0.5rem;
   padding: 0.5rem;
   margin-bottom: 1rem;
+  
 }
 
 </style>

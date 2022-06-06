@@ -1,7 +1,5 @@
 <template>
   <section class="card">
-    
-
     <div class="card">
       <h1>Réseau social interne</h1>
       <!--Logo-->

@@ -3,7 +3,15 @@
     <h1 class="cardtitle">Forum Groupomania</h1>
     <div class="form-row">
       <form action="/" method="post">
-        <input v-model="messagePost.message" class="form-row__input" type="text" placeholder="Quoi de neuf ?" />
+        <input v-model="contentPost.message" class="form-row__input" type="text" placeholder="Quoi de neuf ?" />
+        <div class="input-group mb-3">
+          <div class="input-group button">
+            <label for="file">Télécharger image</label>
+          </div>
+          <div class="file-input">
+            <input name="image" type="file" id="file" class="file" @change="selectFile()" ref="image"/>
+          </div>
+        </div>
         <button @click.prevent="createPost()" class="button" :class="{'button--disabled' : !validatedFields}">
           <span v-if="status == 'loading'">envoi du message...</span>
           <span v-else>Envoyer</span>
@@ -22,11 +30,15 @@ export default {
   name: 'CreatePost',
   data() {
     return {
-      messagePost: {
+      contentPost: {
         message: null,
+        image: null
       },
       msgError: '',
       post: '',
+      imgPost: {
+        image: null
+      }
     };
   },
    computed: {
@@ -48,15 +60,18 @@ export default {
     ...mapState(['status', 'editOption'])
   },
   
-  methods: {
+  methods: {   
     createPost() {
       var storage = JSON.parse(localStorage.getItem("user"));
       var token = storage.token;
       var userId = storage.userId;
 
       const fd = new FormData();
-      fd.append("message", this.messagePost.message);
+      fd.append("message", this.contentPost.message);
+      console.log("test récup", fd.get("contentPost"));
       fd.append("userId", userId);
+
+      fd.append("image", this.contentPost.image);
 
       axios
         .post("http://localhost:3000/api/auth/post", fd, {
@@ -72,32 +87,44 @@ export default {
           }
         })
         .catch(error => (this.msgError = error));
+    },
+    selectFile() {
+      this.contentPost.image = this.$refs.image.files[0];
     }
   }
-  
 }
 </script>
 
 <style scoped>
 .form-row {
-    display: flex;
-    margin: 16px 0px;
-    gap:16px;
-    flex-wrap: wrap;
+  margin: 16px 0px;
+  gap:16px;
+  flex-wrap: wrap;
 }
 .form-row__input {
-    padding: 12px;
-    margin: 15px;
-    border: none;
-    border-radius: 8px;
-    background:#f2f2f2;
-    font-weight: 500;
-    font-size: 16px;
-    flex:1;
-    color: black;
+  padding: 15px;
+  margin: 15px;
+  border: none;
+  border-radius: 8px;
+  background:#f2f2f2;
+  font-weight: 500;
+  font-size: 16px;
+  flex:1;
+  color: black;
 }
 .form-row__input::placeholder {
-    color:#aaaaaa;    
+  color:#aaaaaa;    
+}
+
+.file {
+  opacity: 0;
+  width: 0.1px;
+  height: 0.1px;
+  position: absolute;
+}
+
+.button {
+  margin: 10px !important;
 }
 
 </style>

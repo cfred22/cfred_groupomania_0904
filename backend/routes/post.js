@@ -20,5 +20,6 @@ router.get('/', auth, postCtrl.getAllPosts); //afficher tous les postes
 //router.post('/:id/like', auth, postCtrl.likePost);
 
 
+
 // Export du routeur 
 module.exports = router;
