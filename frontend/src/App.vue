@@ -2,16 +2,14 @@
   <nav>
     <router-link to="/">Accueil</router-link> |
     <router-link to="/login">Connexion </router-link> | 
-    <button @click="logout()" class="logout infobulle" aria-label="Déconnexion">
-      👋 
+    <button @click="logout()" class="logout infobulle" aria-label=" Déconnexion ">
+    <i class="fa-solid fa-power-off"></i>
     </button>
-    
   </nav>
   <router-view></router-view>
 </template>
 
 <script>
-
 
 export default {
   name: 'App',
@@ -30,7 +28,6 @@ export default {
 
 <style>
 
-
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -38,7 +35,6 @@ export default {
   text-align: center;
   color: #2c3e50;
 }
-
 
 #logo {
   width: 250px;
@@ -62,7 +58,6 @@ body {
   min-height: 100vh;
   padding:32px;
 }
-
 
 .card__title {
   text-align:center;
@@ -91,7 +86,7 @@ body {
   text-decoration: underline;
 }
 .card__action:hover {
-  cursor:pointer;
+  cursor: pointer;
 }
 
 .button:hover {
@@ -110,7 +105,7 @@ body {
 }
 
 .link:hover {
-  color: red;
+  color: #FD2D01;
   cursor: pointer;
   font-weight: bold;
 }
@@ -123,7 +118,6 @@ body {
 
 .infobulle {
   position: relative;  /* les .infobulle deviennent référents */
-  cursor: help;
 }
 .infobulle:hover::after,
 .infobulle:focus::after {
@@ -131,10 +125,10 @@ body {
   position: absolute;
   font-size: 15px;
   right: -40px;
-  top: -24px;
+  top: -29px;
   color: gray;
   padding: 2px;
-  background: #DCDCDC;
+  background: #FFD7D7;
   transform: translateX(-10%); /* on centre horizontalement  */
   z-index: 1; /* pour s'afficher au dessus des éléments en position relative */
   white-space: nowrap;  /* on interdit le retour à la ligne */
@@ -146,16 +140,28 @@ body {
 [aria-label]:focus:before {
   content: "▼";
   position: absolute;
-  top: -14px;
+  top: -18px;
 	left: 50%;
 	transform: translateX(-50%); /* on centre horizontalement  */
   font-size: 20px;
-  color: #DCDCDC;
+  color: #FFD7D7;
 }
 
 /* pas de contour durant le :focus */
 [aria-label]:focus {
   outline: none;
+}
+
+.fa-power-off {
+  font-size: 16px;
+  color: gray;
+}
+
+.fa-power-off:hover {
+  color: #FD2D01;
+  font-weight: bold;
+  color: #FD2D01;
+  
 }
 
 

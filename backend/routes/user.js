@@ -14,5 +14,7 @@ router.get("/profile/:id", auth, userCtrl.getOneUser); //afficher un profil
 
 router.delete("/profile/:id", auth, userCtrl.deleteUser); //supprimer un profil
 
+//router.put('/:id', auth, multer, userCtrl.modifyUser);
+
 // Export du routeur
 module.exports = router;

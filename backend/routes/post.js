@@ -16,7 +16,9 @@ const multer = require('../middleware/multer-config');
 router.post('/', auth, multer, postCtrl.createPost); // authentification d'abord puis multer (fichier image) 
 router.delete('/:id', auth, postCtrl.deletePost); // Supprimer un post
 router.get('/', auth, postCtrl.getAllPosts); //afficher tous les postes
+router.put('/:id', multer, postCtrl.modifyPost);
 
+//router.get('/:id', auth, postCtrl.getOnePost);
 //router.post('/:id/like', auth, postCtrl.likePost);
 
 

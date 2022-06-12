@@ -23,8 +23,6 @@ if (!user) {
     };
   }
 }
-
-
   
 
 // Création de nouvelles instances de store
@@ -36,8 +34,8 @@ const store = createStore({
       token: '',
     },
     userInfos : {
-      nom:'',
-      prenom: '',
+      firstName:'',
+      lastName: '',
       email: '',
       photo: '',
     },
@@ -86,10 +84,9 @@ const store = createStore({
       });
     },
     getUserInfos: ({commit}) => {
-      instance.post('auth/profile')
+      instance.post('/infos')
       .then(function (response) {
         commit('userInfos', response.data.infos);
-        
       })
       .catch(function () {
       });
