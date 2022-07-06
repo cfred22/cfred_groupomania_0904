@@ -27,7 +27,8 @@ export default {
         userId:"",
         
       },
-      allPosts: []
+      allPosts: [],
+      isAdmin: ""
     };
   },
   mounted() {
@@ -37,11 +38,27 @@ export default {
     if (Storage === null) {
       this.$router.push("/");
       return;
-    }
+    } 
 
-      
-    
-    axios
+    axios.get("http://localhost:3000/api/auth/profile/" + storage.userId,{
+    headers: {Authorization: "Bearer " + token}})
+      .then(response => {
+        this.isAdmin  = response.data.isAdmin;
+        if(this.isAdmin == true) {
+          axios.get("http://localhost:3000/api/auth/post?isAdmin=true", {
+          headers: {Authorization: "Bearer " + token}})
+            .then(response => {
+              this.allPosts = response.data;
+            })
+            .catch(error => { error
+              /*if (error.response.status == 401) {
+                this.$router.push('/login' );
+                localStorage.clear();
+              }*/
+            })
+        }
+        else {
+          axios
       .get("http://localhost:3000/api/auth/post", {
         headers: {
           Authorization: "Bearer " + token
@@ -55,10 +72,10 @@ export default {
         console.log(error); //n'affiche pas le message 'normalement' envoyé par le back
       }),
       this.$store.dispatch("getUserInfos"); // problème pour recup userinfos
+        }
+      })    
     
-  }
-  
-  
+  }  
 };
 
 

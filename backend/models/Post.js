@@ -13,28 +13,28 @@ module.exports = (sequelize, Sequelize) => {
           type: Sequelize.STRING,
           allowNull: true,
           unique: true,
-          
         },
         userId: {
-            type: Sequelize.INTEGER,
-            allowNull: false,
+          type: Sequelize.INTEGER,
+          allowNull: false,
         },
         imageUrl: {
-            type: Sequelize.STRING,
-            allowNull: true,
+          type: Sequelize.STRING,
+          allowNull: true,
         },
-        /*likes:{ 
-          type: DataTypes.NUMBER, 
+        likes:{ 
+          type: Sequelize.INTEGER, 
           default:0 ,
           allowNull: true,
         },
         usersLiked : {
-          type : DataTypes.JSON,
+          type: Sequelize.JSON,
           allowNull: true,
-        },*/
-        
-        
-        
+        },
+        active: {
+          type: Sequelize.BOOLEAN,
+          allowNull: true,
+        }        
       },
       {
         underscored: true,

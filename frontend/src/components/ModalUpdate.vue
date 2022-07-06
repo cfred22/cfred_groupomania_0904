@@ -1,13 +1,5 @@
-<script>
-export default {
-  props: {
-    show: Boolean
-  }
-}
-</script>
-
 <template>
-  <Transition name="modal" >
+  <Transition name="modal" id="modalEditPost">
     <div v-if="show" class="modal-mask">
       <div class="modal-wrapper" @click="$emit('close')">
       
@@ -20,25 +12,19 @@ export default {
                 <div class="input">
                   <label class="title_txt_modal" for="input_text">Modifiez votre texte</label>
                   <br />
-                  <textarea class="input-text" id="inputNewText" type="text" v-model="updatePost.message"></textarea>
+                  <textarea class="input-text" id="inputNewText" type="text" v-model="updatePost.message" ></textarea>
                   <div class="input-group mb-3">
                     <div class="input-group">
                   </div>
                   <div class="file-input button">
-                    <input name="image" type="file" id="file" class="file" @change="selectFile()" ref="image"/>
+                    <input name="image" type="file" id="file" class="file" @change="selectFile()" ref="image" />
                     </div>
                   </div>
-                  <div class="modal-footer">
-                    <slot name="footer">
-                    <button
-                      class="modal-default-button button" type="submit" @click="modifyPost()">OK
-                    </button>
-                    </slot>
-                  </div> 
-                  <!--<button @click.prevent="createPost()" class="button" :class="{'button--disabled' : !validatedFields}">
+                  
+                  <button @click.prevent="$emit('close'), modifyPost()" class="button modal-send">
                     <span v-if="status == 'loading'">envoi du message...</span>
                     <span v-else>Envoyer</span>
-                  </button>-->
+                  </button>
                 </div>
               </form>
             </slot>
@@ -57,6 +43,64 @@ export default {
     </div>
   </Transition>
 </template>
+<script>
+
+import axios from "axios";
+
+export default {
+  name: "ModalBox",
+  
+  component: {},
+
+  data() {
+    return {
+      updatePost: {
+        message:"",
+        image: "",
+      }
+    }
+  },
+  computed: {
+ },
+  props: {
+    show: Boolean,
+    post: {
+      type: Object,
+      default() {}
+    },
+    postId: Boolean,
+  },
+
+  methods:{    
+
+    selectFile() {
+      this.updatePost.image = this.$refs.image.files[0];
+    },
+
+    modifyPost() {
+      var storage = JSON.parse(localStorage.getItem("user"));
+      var token = storage.token;
+      console.log(this.post)
+
+      const fd = new FormData();
+      fd.append("message", this.updatePost.message);
+      fd.append("image", this.updatePost.image);
+
+      axios.put("http://localhost:3000/api/auth/post/" + this.postId, fd, {  
+      headers: {Authorization: "Bearer " + token}})
+      .then(response => {
+        this.$router.push = response.data;
+        if (response) {
+          location.reload();
+        }
+      })
+    },
+  }
+}
+
+
+</script>
+
 
 <style>
 .cross {
@@ -92,7 +136,7 @@ export default {
 .modal-container {
   width: 300px;
   margin: 0px auto;
-  padding: 45px 30px;
+  padding: 26px 30px;
   background-color: #fff;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
@@ -110,9 +154,12 @@ export default {
 .modal-default-button {
   float: left;
   margin-top: 10px;
-  font-size: 10px;
-
+  font-size: 12px;
 }
+.modal-send {
+  margin-top: 10px;
+}
+
 
 textarea {
   width: 100%;

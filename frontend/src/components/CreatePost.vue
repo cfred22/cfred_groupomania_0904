@@ -72,6 +72,7 @@ export default {
       fd.append("userId", userId);
 
       fd.append("image", this.contentPost.image);
+      fd.append("active", true);
 
       axios
         .post("http://localhost:3000/api/auth/post", fd, {

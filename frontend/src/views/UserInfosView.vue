@@ -1,5 +1,5 @@
 <template>
-  <div class="card">
+  <div class="card onepost">
     <h1 class="card__title">Espace Personnel</h1>
     <p class="card__subtitle">Voilà donc qui je suis...</p>
     <p>Je me nomme {{user.firstName}} {{user.lastName}} <br>et voici mon mail professionnel :<br>
@@ -57,6 +57,14 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
+
+.onepost {
+  margin-top: 20px;
+  box-shadow: 0px 1px 8px 0px rgb(0 0 0 / 6%);
+  border-radius: 0.5rem;
+  padding: 60px 100px 60px 100px;
+  margin-bottom: 1rem;
+}
 
 </style>>

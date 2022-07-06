@@ -1,9 +1,17 @@
 <template>
   <nav>
     <router-link to="/">Accueil</router-link> |
-    <router-link to="/login">Connexion </router-link> | 
+    <router-link to="/login" >Connexion </router-link> |
     <button @click="logout()" class="logout infobulle" aria-label=" Déconnexion ">
-    <i class="fa-solid fa-power-off"></i>
+    <i class="fa-solid fa-power-off"> </i>
+
+    <!--<div v-if=" logout === true " class="connec">
+      <router-link to="/login" > Connexion </router-link> |
+    </div>
+    <div v-else class="deconnec">
+      <router-link to="/logout" @click="logout()"> <i class="fa-solid fa-power-off"> </i> </router-link> |
+    </div>-->
+
     </button>
   </nav>
   <router-view></router-view>
@@ -23,13 +31,12 @@ export default {
   }
 }
 
-
 </script>
 
 <style>
 
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'Lato', Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
@@ -43,6 +50,7 @@ export default {
 a {
   text-decoration: none;
   color: gray;
+  font-family: 'Lato', Helvetica, sans-serif;
 }
 
 .router-link-active {
@@ -79,6 +87,7 @@ body {
   font-size: 15px;
   border: none;
   padding: 16px;
+  font-family: 'Lato', Helvetica, sans-serif;
   transition: .4s background-color;
 }
 
@@ -161,7 +170,6 @@ body {
   color: #FD2D01;
   font-weight: bold;
   color: #FD2D01;
-  
 }
 
 

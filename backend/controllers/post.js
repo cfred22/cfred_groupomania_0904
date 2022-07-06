@@ -26,23 +26,48 @@ exports.createPost = (req, res, next) => {
   Post.create({
     userId: req.auth.userId,
     message: req.body.message,
-    imageUrl: imageUrl,
+    imageUrl: imageUrl, 
+    active: 1,
   })
     .then((post) => res.status(201).json(post))
     .catch((error) => res.status(400).json({ error }));
 };
 
+/*** AFFICHER UN POST ***/
+exports.getOnePost = (req, res, next) => {
+  Post.findOne({ 
+    where:{id: req.params.id},
+    //include:[{model: User, attributes: ['firstName', 'lastName', 'id', 'job', 'imageUrl']}, {model: Comments}]
+  })
+    .then((post) => res.status(200).json(post))
+    .catch((error) => res.status(404).json({ error }));
+}
+
 /*** AFFICHER TOUS LES POSTS ***/
 exports.getAllPosts = (req, res, next) => {
-  var where = {
+  var where = {};
+
+  if(req.query.isAdmin){
+    where = {
+      include:[
+        {model: User},
+      ],
+    }
+  } else {
+    where = {
+      where: {
+        active: 1
+      },
       include:[
         {model: User}
       ]
-  };
-  if (req.query.type == "text"){
+    }
+  }
+  /*if (req.query.type == "text"){
     where = {
       where: {
-         message: { [Op.not]: null || "" }
+         message: { [Op.not]: null || "" }, 
+         active: 1
       },
       include:[
         {model: User}
@@ -51,13 +76,14 @@ exports.getAllPosts = (req, res, next) => {
   } else if (req.query.type == "image"){
     where = {
       where: {
-        imageUrl: { [Op.not]: null || "" }
+        imageUrl: { [Op.not]: null || "" },
+        active: 1
       },
       include:[
         {model: User}
       ]
     }
-  }
+  }*/
   Post.findAll(where)
   .then((posts) => res.status(200).json(posts))
   .catch((error) => res.status(400).json({ error }));
@@ -71,52 +97,72 @@ exports.modifyPost = (req, res, next) => {
     ...req.body,
     imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
   } : { ...req.body };
-  
 
   Post.findOne({ where: {id: req.params.id}})
     .then(post => {
       if (!post) {
         return res.status(404).json({ error: "Post non trouvé !" });
       }
-      if(post.imageUrl != null) {
-        const filename = post.imageUrl.split('/images/')[1];
-        fs.unlink(`images/$ {filename}`, () => {
-          Post.update({ ...postObject, id:  req.params.id},{where: {id: req.params.id}})
-            .then((post) => res.status(200).json({ post}))
-            .catch(error => res.status(400).json({ error }));
+
+      User.findOne({ where: { id: req.auth.userId } })
+        .then((user) => {
+          if (user.isAdmin && req.auth.userId != post.userId) {
+            return res
+              .status(401)
+              .json({ error: "Modification non autorisée !" });
+          }
+          if(post.imageUrl != null) {
+            const filename = post.imageUrl.split('/images/')[1];
+            fs.unlink(`images/$ {filename}`, () => {
+              Post.update({ ...postObject, id:  req.params.id},{where: {id: req.params.id}})
+                .then((post) => res.status(200).json({ post}))
+                .catch(error => res.status(400).json({ error }));
+            })
+          } else {
+            Post.update({ ...post, id:  req.params.id},{where: {id: req.params.id}})
+              .then((post) => res.status(200).json({post}))
+              .catch(error => res.status(400).json({ error }));
+          }
         })
-      } else {
-        Post.update({ ...post, id:  req.params.id},{where: {id: req.params.id}})
-          .then((post) => res.status(200).json({post}))
-          .catch(error => res.status(400).json({ error }));
-      }
+        .catch((error) => res.status(400).json({ error }));
+      
     })
     .catch(error => res.status(500).json({ error }));
 };
 
 /*** SUPPRIMER UN POST ***/
 
-exports.deletePost = (req, res,next) => {
+exports.deletePost = (req, res, next) => {
   Post.findOne({ where: { id: req.params.id } })
     .then((post) => {
       if (!post) {
         return res.status(404).json({ error: "Post non trouvé !" });
       }
 
-      const filename = post.imageUrl.split("/images/")[1];
-      console.log(filename);
-
-      fs.unlink(`images/${filename}`, () => {
-        Post.destroy({ where: { id: req.params.id } })
-          .then(() => res.status(204).json(post.id))
-          .catch((error) => res.status(400).json({ error }));
-      });
+      User.findOne({ where: { id: req.auth.userId } })
+        .then((user) => {
+          if (req.auth.userId != post.userId) {
+            return res
+              .status(401)
+              .json({ error: "Suppression non autorisée !" });              
+          }
+          const filename = post.imageUrl.split("/images/")[1];
+              console.log(filename);
+        
+              fs.unlink(`images/${filename}`, () => {
+                Post.destroy({ where: { id: req.params.id } })
+                  .then(() => res.status(204).json(post.id))
+                  .catch((error) => res.status(400).json({ error }));
+              });
+        })
+        .catch((error) => res.status(400).json({ error }));      
     })
-
     .catch((error) => res.status(400).json({ error }));
 };
 
-/*exports.likePost = (req, res, next) => {
+/*** LIKER UN POST ***/
+
+exports.likePost = (req, res, next) => {
   Post.findOne({ where: {id: req.params.id} })
   .then((post) => {
     let likes = post.likes;
@@ -141,8 +187,43 @@ exports.deletePost = (req, res,next) => {
       usersLiked.push(req.body.userIdLike);
       postObject = {...post, likes, usersLiked}
     }
-  })
-};*/
+    Post.update({ ...postObject, id: req.params.id},{where: {id: req.params.id}})
+      .then(() => {res.status(200).json({likes, usersLiked})})
+      .catch((error) => {res.status(400).json({ error })});
+})
+  .catch((error) => {res.status(404).json({ error })});
+};
+
+/*** ACTIVER : DESACTIVER UN POST ***/
+
+exports.activePost = (req, res) => {
+  Post.findOne({ where: {id: req.params.id} })
+  .then((post) => {
+    if (!post) {
+      return res.status(404).json({ error: "Post non trouvé !" });
+    }
+    
+    User.findOne({ where: { id: req.auth.userId } })
+        .then((user) => {
+      if (!user.isAdmin) {
+        return res
+          .status(401)
+          .json({ error: "Suppression non autorisée !" });              
+      
+      }
+    let active = !post.active;
+    console.log(post.active);
+    
+    postObject = {...post, active};
+    console.log(postObject);
+    Post.update({ ...postObject, id: req.params.id},{where: {id: req.params.id}})
+    .then(() => {res.status(200).json({active})})
+      .catch((error) => {res.status(400).json({ error })});
+    })
+    .catch((error) => res.status(400).json({ error }));
+})
+  .catch((error) => {res.status(404).json({ error })});
+};
 
 
 

@@ -13,9 +13,18 @@
       <img v-else />
     </div>
 
-    <div class="card-messageTxt">
+    <div class="card-messageTxt"> 
       <p class="message">{{post.message}}</p>
-      <button class="like post-change" type="button" @click="like('like')" ><i class="fa-regular fa-thumbs-up"></i></button>
+
+      <!--<button class="like post-change" type="button" @click="addLike()" ><i class="fa-regular fa-heart"></i></button>-->
+      <div v-if="(this.userLike == true)" class="liked">
+          <button class="buttonLike like" @click="addLike()"><i class="fa-solid fa-heart" v-bind:style="styleObject"></i></button>
+          <div> {{this.likes}} </div>
+      </div>
+      <div v-else class="liked">
+          <button class="buttonLike like" @click="addLike()"><i class="fa-regular fa-heart"></i></button>
+          <div> {{this.likes}} </div>
+      </div>
     </div>
  
     <div id="app">
@@ -25,47 +34,33 @@
         </button>
         <!--<button class="modifyPost" v-if="post.userId == userId " type="button" @click="modifyPost(post.id)" > Modif.Post
         </button>-->
-        <button id="show-modal" class="modifyPost" v-if="post.userId == userId " type="button" @click="showModal = true">Modif.Post</button>
+        <button id="show-modal" data-target="#modalEditPost" class="modifyPost" v-if="post.userId == userId " type="button" @click="emitModal()">Modif.Post</button>
         <Teleport to="body">
           <!-- use the modal component, pass in the prop -->
-          <modalUpdate :show="showModal" @close="showModal = false">
+          <modalUpdate :show="showModal" @close="showModal = false" v-bind:postId="post.id">
           </modalUpdate>
         </Teleport>
-      </div>
-      
 
-      <!-- <div class="menu-like" >
-        <button
-          class="like post-change"
-          
-          type="button"
-          @click="like('like');"
-          >👍
-        </button>
+        <!--Admin  active/desactived post-->
         
-      </div> -->
-      
-   <!-- <div class="like">
-       <div v-if="(this.userLike == true)" >
-        <button class="buttonLike blue">{{this.post.likes}}<fa @click="addLike()"  icon="thumbs-up" class="thumbs up"/></button>
-      </div>
-      <div v-else >
-        <button class="buttonLike thumbsgrey">{{this.post.likes}}<fa @click="addLike()" icon="thumbs-up" class="thumbs up"/></button>
-      </div>
-      </div> -->
+        <div v-if="(this.active == false)" class="liked">
+          <button id="show-modal" class="modifyPost" v-if="isAdmin == true" type="button" @click="toggleActive()">Activ.Post</button>
+        </div>
+        <div v-else class="liked">
+          <button id="show-modal" class="modifyPost" v-if="isAdmin == true" type="button" @click="toggleActive()">Desact.Post</button>
+        </div>
+
+      </div>      
     </div>
   </div> 
-  
 </template>
 
 <script>
 import axios from "axios";
-import { mapState } from 'vuex';
 import ModalUpdate from './ModalUpdate.vue';
 
-
 export default {
-  name: 'CreatePost',
+  name: 'PostComponent',
   components: {
     ModalUpdate
   },
@@ -77,33 +72,21 @@ export default {
         firstName: this.post.user.firstName,
         lastName: this.post.user.lastName,
         id: this.post.user.id,
-      },
+      }, 
+      isAdmin: false,
+      active: 1,
+      checkLiker: "",
+      userLike : false,
+      likes: "0",     
       showModal: false,
-      updatePost: {
-        message: null,
-        image: null
-      }
-
-    };
+      styleObject: {
+      color: '#FD2D01'
+      
+    }
+      
+    }
   },
-   computed: {
-    validatedFields: function () {
-      if (this.post == 'createPost') {
-        if (this.post != "") {
-          return true;
-        } else {
-          return false;
-        }
-      } else {
-        if (this.post == "") {
-          return true;
-        } else {
-          return false;
-        }
-      }
-    },
-    ...mapState(['status', 'user'])
-  },
+   computed: {},
   
   props: {
     post: {
@@ -111,7 +94,48 @@ export default {
       required: true
     }
   },
+  created() { 
+    this.getPost();
+    this.checkAdmin();
+    
+  },
   methods: {
+
+    getPost(){
+      var storage = JSON.parse(localStorage.getItem("user"));
+      var token = storage.token;
+
+      //userId = window.location.href.split("/")[4];
+      axios.get("http://localhost:3000/api/auth/post/" + this.post.id, {
+      headers: {Authorization: "Bearer " + token}})
+      .then(response => {
+        this.checkLiker = response.data;
+        //this.userId = this.post.userId;
+        this.userLiked = this.checkLiker.usersLiked.find(p => p == this.userId);
+        this.likes = response.data.likes;
+        
+        if (this.userLiked != undefined){
+          this.userLike = true;
+        }
+        else {
+          this.userLike = false;
+        }
+        // ACTIVE:DESACTIVE
+        if(response.data.active == true){
+        this.active = 1;
+      } else if (response.data.active == false) {
+        this.active = 0;
+      } 
+        //this.active = response.data.active;
+        console.log(response.data.active + "getPost");
+      })
+      .catch(error => { 
+        if (error.response.status == 401) {
+          this.$router.push('/login' );
+          localStorage.clear();
+        }
+      })
+    },
     
     deletePost() {
       var storage = JSON.parse(localStorage.getItem("user"));
@@ -124,45 +148,78 @@ export default {
           location.reload();
         }
       })
-    },
-
-    modifyPost() {
-      var storage = JSON.parse(localStorage.getItem("user"));
-      var token = storage.token;
-
-      const fd = new FormData();
-      fd.append("message", this.updatePost.message);
-      fd.append("image", this.updatePost.image);
-
-      axios.put("http://localhost:3000/api/auth/post/" + this.post.id, fd, {
-      headers: {Authorization: "Bearer " + token}})
-      .then(response => {
-        this.$router.push = response.data;
-        if (response) {
-          location.reload();
-        }
-      })
+    },    
+    emitModal() {
+      this.showModal = true;
+      this.$emit("infosPost", { post: this.post });
     },
 
     selectFile() {
       this.contentPost.image = this.$refs.image.files[0];
-    }
-
-    /*addLike(){
+    },
+    addLike() {
+      var storage = JSON.parse(localStorage.getItem("user"));
+      var token = storage.token;
       this.like = 1;
-      const formData = {like : this.like, userIdLike : this.userId}
-      axios.post("http://localhost:3000/api/article/"  + this.article_id + "/like", formData, {
-      headers: {Authorization: "Bearer " + this.token}})
+
+      const formData = {
+        like : this.like,
+        userIdLike : this.userId
+        }
+        
+      axios.post("http://localhost:3000/api/auth/post/"  + this.post.id + "/like", formData, {
+      headers: {Authorization: "Bearer " + token}})
       .then(() => {
         this.getPost();
+        //this.$router.go();
+        
       })
     },
-    cancel() {
-      location.reload();
-    }*/
+
+    checkAdmin() {
+      var storage = JSON.parse(localStorage.getItem("user"));
+      var token = storage.token;
+      
+      axios.get("http://localhost:3000/api/auth/profile/" + storage.userId, {
+      headers: {Authorization: "Bearer " + token}})
+      .then(response => {
+      console.log(response.data.isAdmin);
+      this.isAdmin = response.data.isAdmin;
+      /*if(response.isAdmin == 1){
+        this.isAdmin = true;
+        console.log(response.isAdmin);
+      } else if (response.isAdmin == 0){
+        this.isAdmin = false;
+      } else {return}*/
+    })
+    },
+    toggleActive() {
+      var storage = JSON.parse(localStorage.getItem("user"));
+      var token = storage.token;
+
+      this.getPost();
+
+      if(this.active == 1){
+        this.active = 0;
+      } else if (this.active == 0) {
+        this.active = 1;
+      } 
+      console.log(this.active); 
+
+      const formData = {
+        active : this.active,
+        }
+        
+      axios.post("http://localhost:3000/api/auth/post/"  + this.post.id + "/active", formData, {
+      headers: {Authorization: "Bearer " + token}})
+      .then(() => {
+        this.getPost();
+        //this.$router.go();
+        
+      })
+    }
   }
 };
-
 
 
 </script>
@@ -183,7 +240,6 @@ export default {
   text-decoration: underline;
 }
 
-
 #app {
   display: flex;
   justify-content: space-around;
@@ -203,6 +259,7 @@ export default {
   color: black;
   display: flex;
   flex-direction: column;
+  font-family: 'Lato', Helvetica, sans-serif;
 }
 
 .card-file {
@@ -214,10 +271,12 @@ export default {
 
 .cover {
   object-fit: cover;
+  border-radius: 6px;
 }
 
 .form-row__input::placeholder {
   color:#aaaaaa;    
+  font-family: 'Lato', Helvetica, sans-serif;
 }
 
 .date-time {
@@ -230,6 +289,7 @@ export default {
   border-radius: 8px;
   border: none;
   font-size: 14px;
+  font-family: 'Lato', Helvetica, sans-serif;
   margin: 10px 10px 10px 0;
   padding: 10px;
   background: #FFD7D7;
@@ -244,25 +304,27 @@ export default {
 .card-messageTxt {
   display: flex;
   justify-content: center;
+  align-items: baseline;
 }
 
 .message {
   margin: 10px;
+  max-width: 500px;
 }
 
 .like {
   border: none;
   background: none;
   cursor: pointer;
-}
-
-.fa-thumbs-up {
   font-size: 16px;
-  color: #FD2D01;
+  color: gray;
 }
 
-
-
+.liked {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-around;
+}
 
 
 </style>
