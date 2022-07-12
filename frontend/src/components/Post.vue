@@ -32,8 +32,6 @@
       <div class="menu">  
         <button class="deletePost" v-if="post.userId == userId " type="button" @click="deletePost()"> Suppr.Post
         </button>
-        <!--<button class="modifyPost" v-if="post.userId == userId " type="button" @click="modifyPost(post.id)" > Modif.Post
-        </button>-->
         <button id="show-modal" data-target="#modalEditPost" class="modifyPost" v-if="post.userId == userId " type="button" @click="emitModal()">Modif.Post</button>
         <Teleport to="body">
           <!-- use the modal component, pass in the prop -->
@@ -42,7 +40,6 @@
         </Teleport>
 
         <!--Admin  active/desactived post-->
-        
         <div v-if="(this.active == false)" class="liked">
           <button id="show-modal" class="modifyPost" v-if="isAdmin == true" type="button" @click="toggleActive()">Activ.Post</button>
         </div>
@@ -81,9 +78,7 @@ export default {
       showModal: false,
       styleObject: {
       color: '#FD2D01'
-      
     }
-      
     }
   },
    computed: {},
@@ -97,7 +92,6 @@ export default {
   created() { 
     this.getPost();
     this.checkAdmin();
-    
   },
   methods: {
 
@@ -105,12 +99,10 @@ export default {
       var storage = JSON.parse(localStorage.getItem("user"));
       var token = storage.token;
 
-      //userId = window.location.href.split("/")[4];
       axios.get("http://localhost:3000/api/auth/post/" + this.post.id, {
       headers: {Authorization: "Bearer " + token}})
       .then(response => {
         this.checkLiker = response.data;
-        //this.userId = this.post.userId;
         this.userLiked = this.checkLiker.usersLiked.find(p => p == this.userId);
         this.likes = response.data.likes;
         
@@ -126,8 +118,6 @@ export default {
       } else if (response.data.active == false) {
         this.active = 0;
       } 
-        //this.active = response.data.active;
-        console.log(response.data.active + "getPost");
       })
       .catch(error => { 
         if (error.response.status == 401) {
@@ -171,8 +161,6 @@ export default {
       headers: {Authorization: "Bearer " + token}})
       .then(() => {
         this.getPost();
-        //this.$router.go();
-        
       })
     },
 
@@ -183,14 +171,7 @@ export default {
       axios.get("http://localhost:3000/api/auth/profile/" + storage.userId, {
       headers: {Authorization: "Bearer " + token}})
       .then(response => {
-      console.log(response.data.isAdmin);
       this.isAdmin = response.data.isAdmin;
-      /*if(response.isAdmin == 1){
-        this.isAdmin = true;
-        console.log(response.isAdmin);
-      } else if (response.isAdmin == 0){
-        this.isAdmin = false;
-      } else {return}*/
     })
     },
     toggleActive() {
@@ -204,7 +185,6 @@ export default {
       } else if (this.active == 0) {
         this.active = 1;
       } 
-      console.log(this.active); 
 
       const formData = {
         active : this.active,
@@ -214,8 +194,6 @@ export default {
       headers: {Authorization: "Bearer " + token}})
       .then(() => {
         this.getPost();
-        //this.$router.go();
-        
       })
     }
   }

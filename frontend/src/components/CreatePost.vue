@@ -68,7 +68,6 @@ export default {
 
       const fd = new FormData();
       fd.append("message", this.contentPost.message);
-      console.log("test récup", fd.get("contentPost"));
       fd.append("userId", userId);
 
       fd.append("image", this.contentPost.image);

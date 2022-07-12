@@ -34,8 +34,6 @@ export default {
     
     this.userId = window.location.href.split("/")[4]; 
 
-    console.log(this.userId);
-
     axios.get("http://localhost:3000/api/auth/profile/" + this.userId, {
     headers: {Authorization: "Bearer " + token}})
     .then(response => {

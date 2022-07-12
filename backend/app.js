@@ -21,7 +21,6 @@ try {
 // Import du routes/user/post/routes
 const userRoutes = require('./routes/user');
 const postRoutes = require('./routes/post');
-const commentRoutes = require('./routes/comment');
 
 const cors = require ('cors');  // cors
 
@@ -46,7 +45,6 @@ app.use(cors());
 app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use('/api/auth', userRoutes); 
 app.use('/api/auth/post', postRoutes);
-app.use('/api/comment', commentRoutes);
 
 
 require("./config/database/build")(sequelize, Sequelize);

@@ -23,7 +23,6 @@ if (!user) {
     };
   }
 }
-  
 
 // Création de nouvelles instances de store
 const store = createStore({

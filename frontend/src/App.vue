@@ -2,17 +2,11 @@
   <nav>
     <router-link to="/">Accueil</router-link> |
     <router-link to="/login" >Connexion </router-link> |
+
     <button @click="logout()" class="logout infobulle" aria-label=" Déconnexion ">
-    <i class="fa-solid fa-power-off"> </i>
-
-    <!--<div v-if=" logout === true " class="connec">
-      <router-link to="/login" > Connexion </router-link> |
-    </div>
-    <div v-else class="deconnec">
-      <router-link to="/logout" @click="logout()"> <i class="fa-solid fa-power-off"> </i> </router-link> |
-    </div>-->
-
+    <i class="fa-solid fa-power-off"> </i>    
     </button>
+
   </nav>
   <router-view></router-view>
 </template>
@@ -23,11 +17,24 @@ export default {
   name: 'App',
   components: {
   },
+  data() {
+    return {
+      connected: false
+    }
+  },
+  
   methods: {
     logout() {
       localStorage.clear()
       this.$router.push('/');
     },
+    connect() {
+      if (JSON.parse(localStorage.getItem("user")) !== null){
+        this.connected = true;
+      } else {
+        this.connected = false;
+      }
+    }
   }
 }
 

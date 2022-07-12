@@ -23,12 +23,10 @@ exports.signup = (req, res, next) => {
           res.status(201).json(User) // Utilsateur créé et sauvegardé !
         )
         .catch((error) => {
-          console.log(error);
           res.status(500).json({ error });
         });
     })
     .catch((oups) => {
-      console.log(oups);
       res.status(500).json({ oups});
     });
 };

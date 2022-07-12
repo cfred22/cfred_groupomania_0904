@@ -9,12 +9,10 @@ const auth = require("../middleware/auth");
 router.post('/signup', userCtrl.signup);
 router.post('/login', userCtrl.login);
 
-//-->  ROUTES PROFIL UTILISATEURS <--// **** TODO AUTH
+//-->  ROUTES PROFIL UTILISATEURS <--// 
 router.get("/profile/:id", auth, userCtrl.getOneUser); //afficher un profil
 
 router.delete("/profile/:id", auth, userCtrl.deleteUser); //supprimer un profil
-
-//router.put('/:id', auth, multer, userCtrl.modifyUser);
 
 // Export du routeur
 module.exports = router;

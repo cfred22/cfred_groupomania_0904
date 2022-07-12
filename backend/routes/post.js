@@ -22,7 +22,5 @@ router.get('/:id', auth, postCtrl.getOnePost);
 router.post('/:id/like', auth, postCtrl.likePost);
 router.post('/:id/active', auth, postCtrl.activePost);
 
-
-
 // Export du routeur 
 module.exports = router;

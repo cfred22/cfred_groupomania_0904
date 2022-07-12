@@ -34,7 +34,6 @@ export default {
   mounted() {
     var storage = JSON.parse(localStorage.getItem("user"));
     var token = storage.token;
-    // pour éviter la faille de sécurité: l'utilisateur ajouter "/profile" sans se connecter
     if (Storage === null) {
       this.$router.push("/");
       return;
@@ -51,10 +50,6 @@ export default {
               this.allPosts = response.data;
             })
             .catch(error => { error
-              /*if (error.response.status == 401) {
-                this.$router.push('/login' );
-                localStorage.clear();
-              }*/
             })
         }
         else {
@@ -74,7 +69,6 @@ export default {
       this.$store.dispatch("getUserInfos"); // problème pour recup userinfos
         }
       })    
-    
   }  
 };
 

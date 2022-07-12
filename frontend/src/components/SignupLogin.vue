@@ -89,7 +89,6 @@ export default {
     },
     login: function () {
       const self = this;
-      console.log(this.email, this.password);
       this.$store.dispatch('login', {
         email: this.email,
         password: this.password,
@@ -100,7 +99,6 @@ export default {
       })
     },
     signup: function () {
-      console.log(this.email, this.password, this.lastName);
       this.$store.dispatch('signup', {
         email: this.email,
         lastName: this.lastName,

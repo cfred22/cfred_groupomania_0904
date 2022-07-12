@@ -2,13 +2,10 @@
   <Transition name="modal" id="modalEditPost">
     <div v-if="show" class="modal-mask">
       <div class="modal-wrapper" @click="$emit('close')">
-      
         <div class="modal-container" @click.stop="">
-
           <div class="modal-body">
             <slot name="body">
               <form enctype="multipart/form-data" action="/update" method="put">
-
                 <div class="input">
                   <label class="title_txt_modal" for="input_text">Modifiez votre texte</label>
                   <br />
@@ -20,7 +17,6 @@
                     <input name="image" type="file" id="file" class="file" @change="selectFile()" ref="image" />
                     </div>
                   </div>
-                  
                   <button @click.prevent="$emit('close'), modifyPost()" class="button modal-send">
                     <span v-if="status == 'loading'">envoi du message...</span>
                     <span v-else>Envoyer</span>
@@ -29,15 +25,6 @@
               </form>
             </slot>
           </div>
-          <!-- <div class="modal-footer">
-            <slot name="footer">
-              <button
-                class="modal-default-button button"
-                @click="$emit('close')"
-                >OK
-              </button>
-            </slot>
-          </div> -->
         </div>
       </div>
     </div>
@@ -80,7 +67,6 @@ export default {
     modifyPost() {
       var storage = JSON.parse(localStorage.getItem("user"));
       var token = storage.token;
-      console.log(this.post)
 
       const fd = new FormData();
       fd.append("message", this.updatePost.message);
@@ -97,10 +83,7 @@ export default {
     },
   }
 }
-
-
 </script>
-
 
 <style>
 .cross {
@@ -160,7 +143,6 @@ export default {
   margin-top: 10px;
 }
 
-
 textarea {
   width: 100%;
   height: 150px;
@@ -174,7 +156,6 @@ textarea {
   resize: none;
   font-family: Arial;
 }
-
 
 /*
  * The following styles are auto-applied to elements with

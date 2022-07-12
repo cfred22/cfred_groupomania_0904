@@ -37,7 +37,6 @@ exports.createPost = (req, res, next) => {
 exports.getOnePost = (req, res, next) => {
   Post.findOne({ 
     where:{id: req.params.id},
-    //include:[{model: User, attributes: ['firstName', 'lastName', 'id', 'job', 'imageUrl']}, {model: Comments}]
   })
     .then((post) => res.status(200).json(post))
     .catch((error) => res.status(404).json({ error }));
@@ -63,27 +62,6 @@ exports.getAllPosts = (req, res, next) => {
       ]
     }
   }
-  /*if (req.query.type == "text"){
-    where = {
-      where: {
-         message: { [Op.not]: null || "" }, 
-         active: 1
-      },
-      include:[
-        {model: User}
-      ]
-    }
-  } else if (req.query.type == "image"){
-    where = {
-      where: {
-        imageUrl: { [Op.not]: null || "" },
-        active: 1
-      },
-      include:[
-        {model: User}
-      ]
-    }
-  }*/
   Post.findAll(where)
   .then((posts) => res.status(200).json(posts))
   .catch((error) => res.status(400).json({ error }));
@@ -147,7 +125,6 @@ exports.deletePost = (req, res, next) => {
               .json({ error: "Suppression non autorisée !" });              
           }
           const filename = post.imageUrl.split("/images/")[1];
-              console.log(filename);
         
               fs.unlink(`images/${filename}`, () => {
                 Post.destroy({ where: { id: req.params.id } })
@@ -212,10 +189,8 @@ exports.activePost = (req, res) => {
       
       }
     let active = !post.active;
-    console.log(post.active);
     
     postObject = {...post, active};
-    console.log(postObject);
     Post.update({ ...postObject, id: req.params.id},{where: {id: req.params.id}})
     .then(() => {res.status(200).json({active})})
       .catch((error) => {res.status(400).json({ error })});
@@ -224,7 +199,3 @@ exports.activePost = (req, res) => {
 })
   .catch((error) => {res.status(404).json({ error })});
 };
-
-
-
-
