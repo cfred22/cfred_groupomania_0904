@@ -6,7 +6,6 @@
     <button @click="logout()" class="logout infobulle" aria-label=" Déconnexion ">
     <i class="fa-solid fa-power-off"> </i>    
     </button>
-
   </nav>
   <router-view></router-view>
 </template>
