@@ -4,7 +4,7 @@
 Projet 7 openclassrooms par Frederic Clech (Cfred22)  
 Création d'un réseau social interne pour les employés de Groupomania 
 
-## Contenue du site
+## Contenu du site
 -------
 
 * Système de signup et login sécurisé
