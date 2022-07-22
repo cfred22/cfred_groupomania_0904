@@ -34,6 +34,7 @@ export default {
   mounted() {
     var storage = JSON.parse(localStorage.getItem("user"));
     var token = storage.token;
+    
     if (Storage === null) {
       this.$router.push("/");
       return;
@@ -53,8 +54,7 @@ export default {
             })
         }
         else {
-          axios
-      .get("http://localhost:3000/api/auth/post", {
+          axios.get("http://localhost:3000/api/auth/post", {
         headers: {
           Authorization: "Bearer " + token
         }
