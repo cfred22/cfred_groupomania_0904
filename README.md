@@ -10,7 +10,7 @@ Création d'un réseau social interne pour les employés de Groupomania
 * Système de signup et login sécurisé
 * Gestion des publications en création, modification et suppression
 * Implémentation d'un système de like
-* Création d'un rôle administrateur (mail: tutu@gree.fr, mdp: tutu)
+* Création d'un rôle administrateur (mail: admin@gree.fr, mdp: tutu)
 
 ## Installation
 -------
