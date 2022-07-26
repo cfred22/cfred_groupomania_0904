@@ -91,7 +91,7 @@ exports.modifyPost = (req, res, next) => {
           }
           if(post.imageUrl != null) {
             const filename = post.imageUrl.split('/images/')[1];
-            fs.unlink(`images/$ {filename}`, () => {
+            fs.unlink(`images/${filename}`, () => {
               Post.update({ ...postObject, id:  req.params.id},{where: {id: req.params.id}})
                 .then((post) => res.status(200).json({ post}))
                 .catch(error => res.status(400).json({ error }));

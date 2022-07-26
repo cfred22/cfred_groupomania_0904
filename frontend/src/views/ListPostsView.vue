@@ -1,7 +1,7 @@
 <template>
   <div id="post" class="post">
     <CreatePost class="createPost"/>
-    <Post v-for="post in allPosts.reverse()" class="onepost" v-bind:key="post.id" :post="post" @infosPost="setInfos"/>
+    <Post v-for="post in allPosts.reverse()" class="onepost" v-bind:key="post.id" :post="post"/>
   </div>
 </template>
 
@@ -65,8 +65,8 @@ export default {
       })
       .catch(error => {
         console.log(error); //n'affiche pas le message 'normalement' envoyé par le back
-      }),
-      this.$store.dispatch("getUserInfos"); // problème pour recup userinfos
+      })
+      //this.$store.dispatch("getUserInfos"); // problème pour recup userinfos
         }
       })    
   }  
